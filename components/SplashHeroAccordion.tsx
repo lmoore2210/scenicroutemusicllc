@@ -10,13 +10,16 @@ import {
   ShieldCheck, 
   MapPin, 
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  ChevronRight
 } from 'lucide-react';
 
 interface Offering {
   id: string;
   title: string;
+  shortTitle: string;
   icon: React.ElementType;
+  summary: string;
   bullets: string[];
   ctaHref: string;
 }
@@ -25,7 +28,9 @@ const OFFERINGS: Offering[] = [
   {
     id: 'live-sound',
     title: 'Live Sound & AV Production',
+    shortTitle: 'Live Sound & AV',
     icon: Sliders,
+    summary: 'FOH mixing, PA deployment, wireless systems & feedback suppression',
     bullets: [
       'Digital and Analog Equipment',
       'Acoustic Optimization',
@@ -38,7 +43,9 @@ const OFFERINGS: Offering[] = [
   {
     id: 'live-music',
     title: 'Live Music By Luke Moore',
+    shortTitle: 'Live Music',
     icon: Mic2,
+    summary: 'Solo acoustic, duo & full rock band • 300+ song repertoire',
     bullets: [
       'Solo Acoustic, Duo & Full Rock Band',
       '300+ Song Repertoire',
@@ -49,7 +56,9 @@ const OFFERINGS: Offering[] = [
   {
     id: 'lessons',
     title: 'Music Lessons',
+    shortTitle: 'Music Lessons',
     icon: GraduationCap,
+    summary: 'Guitar, Bass, Drums, Piano & Vocals • Band coaching & songwriting',
     bullets: [
       'Acoustic or Electric Guitar, Bass Guitar, Drums, Piano and Vocal Lessons',
       'Rock Band Coaching and Stage Presence',
@@ -64,19 +73,17 @@ export default function SplashHeroAccordion() {
 
   return (
     <section 
+      className="splash-hero-section"
       style={{
         position: 'relative',
         width: '100%',
-        height: '100vh',
-        maxHeight: '100vh',
         backgroundColor: '#0a0a0a',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        overflow: 'hidden',
         borderBottom: '2px solid #b8972e',
         boxSizing: 'border-box',
-        paddingTop: '20px'
+        paddingTop: '16px'
       }}
     >
       {/* 5-PLY GIBSON CUSTOM BINDING ACCENT (GOLD & CREAM) */}
@@ -85,7 +92,7 @@ export default function SplashHeroAccordion() {
 
       {/* TOP BRAND HEADER (Centered: Official Logo + 3 Offering Links) */}
       <div style={{
-        padding: '0 20px 8px 20px',
+        padding: '0 16px 8px 16px',
         textAlign: 'center',
         zIndex: 10,
         display: 'flex',
@@ -107,7 +114,7 @@ export default function SplashHeroAccordion() {
             height={140}
             style={{
               height: 'auto',
-              maxHeight: '90px',
+              maxHeight: '85px',
               width: 'auto',
               objectFit: 'contain',
               mixBlendMode: 'screen'
@@ -123,7 +130,7 @@ export default function SplashHeroAccordion() {
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '8px',
-          marginTop: '4px'
+          marginTop: '2px'
         }}>
           {OFFERINGS.map((offering) => {
             const Icon = offering.icon;
@@ -135,20 +142,20 @@ export default function SplashHeroAccordion() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '6px 14px',
+                  padding: '5px 12px',
                   backgroundColor: '#121212',
                   border: '1px solid #2e2e2e',
                   color: '#f5ecd7',
                   fontSize: '11px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
-                  letterSpacing: '1px',
+                  letterSpacing: '0.8px',
                   textDecoration: 'none',
                   fontFamily: "'Courier New', Courier, monospace, sans-serif",
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={13} color="#d4af37" />
+                <Icon size={12} color="#d4af37" />
                 <span>{offering.title}</span>
               </Link>
             );
@@ -161,12 +168,12 @@ export default function SplashHeroAccordion() {
           justifyContent: 'center',
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: '10px',
+          gap: '8px',
           fontSize: '10px',
           color: '#a8a090',
           fontFamily: "'Courier New', Courier, monospace, sans-serif",
           textTransform: 'uppercase',
-          letterSpacing: '1.5px',
+          letterSpacing: '1.2px',
           marginTop: '2px'
         }}>
           <span style={{ color: '#d4af37', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
@@ -178,18 +185,17 @@ export default function SplashHeroAccordion() {
           </span>
           <span style={{ color: '#444444' }}>•</span>
           <span style={{ color: '#ede2cb', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-            <Sparkles size={11} color="#d4af37" /> Statewide WA Travel
+            <Sparkles size={11} color="#d4af37" /> Serving the U.S.A.
           </span>
         </div>
       </div>
 
-      {/* 3 EXPANDING VERTICAL PANELS (GLOSS BLACK & GOLD HARDWARE WITH CREAM BINDING) */}
+      {/* ─── DESKTOP VIEW: 3 EXPANDING VERTICAL PANELS ─── */}
       <div 
         onMouseLeave={() => setHoveredIndex(null)}
         style={{
           flex: 1,
           minHeight: 0,
-          display: 'flex',
           flexDirection: 'row',
           width: '100%',
           maxWidth: '1360px',
@@ -199,14 +205,13 @@ export default function SplashHeroAccordion() {
           boxSizing: 'border-box',
           alignItems: 'stretch'
         }}
-        className="splash-accordion-container"
+        className="splash-desktop-accordion"
       >
         {OFFERINGS.map((offering, idx) => {
           const isHovered = hoveredIndex === idx;
           const isNoneHovered = hoveredIndex === null;
           const Icon = offering.icon;
 
-          // Flex sizing: evenly spaced (1) when none hovered, or 2.2 vs 0.75 when one is hovered
           const panelFlex = isNoneHovered ? 1 : isHovered ? 2.2 : 0.75;
 
           return (
@@ -319,10 +324,121 @@ export default function SplashHeroAccordion() {
         })}
       </div>
 
+      {/* ─── MOBILE VIEW ONLY: 3 HORIZONTAL CLICKABLE SECTIONS ─── */}
+      <div 
+        className="splash-mobile-horizontal-container"
+        style={{
+          width: '100%',
+          padding: '12px 16px 18px 16px',
+          boxSizing: 'border-box',
+          gap: '12px'
+        }}
+      >
+        {OFFERINGS.map((offering) => {
+          const Icon = offering.icon;
+
+          return (
+            <Link
+              key={offering.id}
+              href={offering.ctaHref}
+              className="splash-mobile-horizontal-card"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#111111',
+                border: '1px solid #282828',
+                borderLeft: '4px solid #d4af37',
+                borderRadius: '6px',
+                padding: '14px 14px',
+                textDecoration: 'none',
+                color: 'inherit',
+                boxShadow: '0 4px 18px rgba(0,0,0,0.85), 0 0 10px rgba(212,175,55,0.08)',
+                gap: '12px',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {/* Subtle top gloss border */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '1px',
+                backgroundColor: '#ede2cb',
+                opacity: 0.25
+              }} />
+
+              {/* LEFT ICON */}
+              <div style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '4px',
+                backgroundColor: '#1a1a1a',
+                border: '1px solid #d4af37',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#d4af37',
+                flexShrink: 0,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.6)'
+              }}>
+                <Icon size={19} />
+              </div>
+
+              {/* CENTER: BOLD HEADER + ONE-LINE SUBTLE DROP SHADOW SUMMARY */}
+              <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <h3 style={{
+                  margin: 0,
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '16px',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  lineHeight: 1.2,
+                  letterSpacing: '0.2px',
+                  textShadow: '0 1px 3px rgba(0,0,0,0.9)'
+                }}>
+                  {offering.title}
+                </h3>
+
+                {/* ONE-LINE SUMMARY WITH SUBTLE DROP SHADOW */}
+                <p 
+                  className="mobile-summary-text"
+                  style={{
+                    margin: 0,
+                    fontSize: '12px',
+                    color: '#d5cec2',
+                    lineHeight: 1.35,
+                    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                    textShadow: '0 1px 3px rgba(0,0,0,0.95), 0 2px 6px rgba(0,0,0,0.85)'
+                  }}
+                >
+                  {offering.summary}
+                </p>
+              </div>
+
+              {/* RIGHT CHEVRON */}
+              <div style={{
+                color: '#d4af37',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                paddingLeft: '2px'
+              }}>
+                <ChevronRight size={18} />
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
       {/* COMPACT BOTTOM PROMPT */}
       <div 
         style={{
-          padding: '8px 20px',
+          padding: '8px 16px',
           textAlign: 'center',
           backgroundColor: '#070707',
           borderTop: '1px solid #1f1f1f',
@@ -345,20 +461,45 @@ export default function SplashHeroAccordion() {
         </span>
       </div>
 
-      {/* RESPONSIVE CSS */}
+      {/* RESPONSIVE TOGGLE STYLES */}
       <style jsx>{`
-        @media (max-width: 900px) {
-          .splash-accordion-container {
-            flex-direction: column !important;
+        /* Desktop Default */
+        .splash-hero-section {
+          height: 100vh;
+          max-height: 100vh;
+          overflow: hidden;
+        }
+        .splash-desktop-accordion {
+          display: flex !important;
+        }
+        .splash-mobile-horizontal-container {
+          display: none !important;
+        }
+
+        /* Mobile View Only (<= 768px) */
+        @media (max-width: 768px) {
+          .splash-hero-section {
             height: auto !important;
-            min-height: auto !important;
+            min-height: 100vh;
+            max-height: none !important;
+            overflow: visible !important;
+            padding-bottom: 16px;
           }
-          .splash-panel {
-            flex: 1 1 auto !important;
-            min-height: 180px;
+          .splash-desktop-accordion {
+            display: none !important;
+          }
+          .splash-mobile-horizontal-container {
+            display: flex !important;
+            flex-direction: column !important;
+          }
+          .splash-mobile-horizontal-card:active {
+            transform: scale(0.985);
+            background-color: #181818 !important;
+            border-color: #d4af37 !important;
           }
         }
       `}</style>
     </section>
   );
 }
+
