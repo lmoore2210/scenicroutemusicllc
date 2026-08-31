@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { 
   Guitar, 
   Mic2, 
@@ -9,7 +10,10 @@ import {
   Sliders, 
   CheckCircle2, 
   ArrowRight, 
-  Volume2
+  Volume2,
+  Download,
+  FileText,
+  Sparkles
 } from 'lucide-react';
 
 export default function LessonsPage() {
@@ -329,6 +333,211 @@ export default function LessonsPage() {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* FREE SONGWRITER CHEAT SHEET RESOURCE SECTION */}
+      <section id="cheat-sheet" style={{
+        backgroundColor: "#070707",
+        borderTop: "1px solid #1f1f1f",
+        borderBottom: "1px solid #1f1f1f",
+        padding: "64px 20px"
+      }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          
+          <div style={{
+            backgroundColor: "#121212",
+            border: "2px solid #b8972e",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.9), 0 0 25px rgba(212,175,55,0.15)",
+            padding: "40px 32px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "36px",
+            alignItems: "center",
+            position: "relative",
+            overflow: "hidden"
+          }}>
+            {/* Top 5-Ply Accent */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: "#d4af37" }} />
+
+            {/* LEFT COLUMN: RESOURCE INFORMATION & DOWNLOAD BUTTONS */}
+            <div>
+              <div style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "5px 12px",
+                backgroundColor: "#1a1408",
+                border: "1px solid #d4af37",
+                color: "#d4af37",
+                fontSize: "11px",
+                fontWeight: 800,
+                letterSpacing: "1.5px",
+                textTransform: "uppercase",
+                fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                marginBottom: "16px"
+              }}>
+                <Sparkles size={13} color="#d4af37" />
+                <span>Free Songwriting Guide &amp; PDF</span>
+              </div>
+
+              <h2 style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "clamp(26px, 3.5vw, 36px)",
+                color: "#ffffff",
+                lineHeight: 1.15,
+                margin: "0 0 16px 0",
+                fontWeight: 700
+              }}>
+                Master Songwriting Harmony in Minutes
+              </h2>
+
+              <p style={{
+                fontSize: "15px",
+                color: "#d5cec2",
+                lineHeight: 1.7,
+                marginBottom: "24px",
+                fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+              }}>
+                Ready to take the guesswork out of writing chord progressions? Download our free <strong>Songwriter’s Number System Cheat Sheet</strong> to learn how to transpose instantly, navigate the major scale, and build radio-ready songs in any key.
+              </p>
+
+              {/* QUICK HIGHLIGHT BULLETS */}
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                marginBottom: "28px"
+              }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "#ede2cb", fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif" }}>
+                  <CheckCircle2 size={15} color="#d4af37" style={{ marginTop: "2px", flexShrink: 0 }} />
+                  <span><strong>Nashville Number System:</strong> Major scale formula &amp; chord quality map in G, C, D, A &amp; E.</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "#ede2cb", fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif" }}>
+                  <CheckCircle2 size={15} color="#d4af37" style={{ marginTop: "2px", flexShrink: 0 }} />
+                  <span><strong>4 Hit Blueprints:</strong> Universal Anthem (1-5-6m-4), Folk/Storyteller, Indie Tension &amp; Americana Blues.</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "#ede2cb", fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif" }}>
+                  <CheckCircle2 size={15} color="#d4af37" style={{ marginTop: "2px", flexShrink: 0 }} />
+                  <span><strong>Harmonic Rules of Thumb:</strong> 1-chord anchors, 4 vs 5 momentum, 6m swaps &amp; capo shortcuts.</span>
+                </div>
+              </div>
+
+              {/* ACTION BUTTONS */}
+              <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+                <a
+                  href="/downloads/songwriters-number-system-cheat-sheet.pdf"
+                  download="Songwriters-Number-System-Cheat-Sheet.pdf"
+                  style={{
+                    padding: "13px 24px",
+                    backgroundColor: "#d4af37",
+                    color: "#0a0a0a",
+                    fontWeight: 800,
+                    fontSize: "12px",
+                    textDecoration: "none",
+                    textTransform: "uppercase",
+                    letterSpacing: "1.2px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    border: "1px solid #f5ecd7",
+                    boxShadow: "0 4px 15px rgba(212,175,55,0.35)",
+                    fontFamily: "'Courier New', Courier, monospace, sans-serif"
+                  }}
+                >
+                  <Download size={15} color="#0a0a0a" /> Download Free PDF
+                </a>
+
+                <a
+                  href="/downloads/songwriters-number-system-cheat-sheet.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: "13px 20px",
+                    backgroundColor: "#161616",
+                    border: "1px solid #2e2e2e",
+                    color: "#ede2cb",
+                    fontWeight: 700,
+                    fontSize: "12px",
+                    textDecoration: "none",
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontFamily: "'Courier New', Courier, monospace, sans-serif"
+                  }}
+                >
+                  <FileText size={15} color="#d4af37" /> View In Browser ↗
+                </a>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: CRISP VISUAL PREVIEW OF THE PDF CHEAT SHEET */}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <a
+                href="/downloads/songwriters-number-system-cheat-sheet.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "block",
+                  position: "relative",
+                  maxWidth: "380px",
+                  width: "100%",
+                  backgroundColor: "#ffffff",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  boxShadow: "0 12px 35px rgba(0,0,0,0.9), 0 0 20px rgba(212,175,55,0.25)",
+                  border: "2px solid #d4af37",
+                  transform: "rotate(-1deg)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  cursor: "pointer",
+                  textDecoration: "none"
+                }}
+              >
+                <div style={{ position: "relative", width: "100%", height: "auto", overflow: "hidden", borderRadius: "2px" }}>
+                  <Image
+                    src="/images/songwriters-cheat-sheet-preview.png"
+                    alt="Songwriter's Number System Cheat Sheet Preview"
+                    width={612}
+                    height={792}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      display: "block"
+                    }}
+                  />
+                </div>
+
+                <div style={{
+                  position: "absolute",
+                  bottom: "16px",
+                  right: "16px",
+                  backgroundColor: "#0a0a0a",
+                  border: "1px solid #d4af37",
+                  color: "#d4af37",
+                  fontSize: "11px",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  padding: "6px 12px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.8)",
+                  fontFamily: "'Courier New', Courier, monospace, sans-serif"
+                }}>
+                  <Download size={13} color="#d4af37" /> Click to Open PDF
+                </div>
+              </a>
+            </div>
+
+          </div>
         </div>
       </section>
 
