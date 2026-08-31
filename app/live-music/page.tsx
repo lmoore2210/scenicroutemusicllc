@@ -15,6 +15,7 @@ import {
 import { SpotifyIcon, YouTubeIcon, InstagramIcon } from '@/components/SocialIcons';
 import LivePerformancePlayer from '@/components/LivePerformancePlayer';
 import LiveMusicSlideshow from '@/components/LiveMusicSlideshow';
+import { submitLeadToEmail } from '@/lib/emailService';
 
 interface ShowEvent {
   id: string;
@@ -1961,6 +1962,20 @@ export default function LiveMusicPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
+
+    // Forward live music booking inquiry to scenicroutemusicllc@gmail.com
+    submitLeadToEmail({
+      subject: `[Live Music Booking] ${formData.name} - ${formData.eventType}`,
+      name: formData.name,
+      email: formData.email,
+      format: formData.format,
+      eventType: formData.eventType,
+      date: formData.date || "Not specified",
+      location: formData.location,
+      specialSongs: formData.specialSongs || "None specified",
+      details: formData.details,
+      formType: "Live Music Booking Request"
+    });
   };
 
   const handleReset = () => {

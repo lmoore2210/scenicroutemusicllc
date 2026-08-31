@@ -6,9 +6,10 @@ import {
   Sliders, 
   ArrowRight, 
   CheckCircle2, 
-  Tv,
-  Radio
+  Tv, 
+  Radio 
 } from "lucide-react";
+import { submitLeadToEmail } from "@/lib/emailService";
 
 export default function LiveSoundPage() {
   const [formData, setFormData] = useState({
@@ -83,6 +84,20 @@ export default function LiveSoundPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
+
+    // Forward live sound quote request to scenicroutemusicllc@gmail.com
+    submitLeadToEmail({
+      subject: `[Live Sound Quote] ${formData.name} - ${formData.eventType}`,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || "Not provided",
+      eventType: formData.eventType,
+      date: formData.date || "Not specified",
+      location: formData.location,
+      liveMusicAddon: formData.liveMusicAddon,
+      details: formData.details,
+      formType: "Live Sound & AV Quote Request"
+    });
   };
 
   const handleReset = () => {

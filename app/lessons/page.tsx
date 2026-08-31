@@ -13,8 +13,13 @@ import {
   Volume2,
   Download,
   FileText,
-  Sparkles
+  Sparkles,
+  X,
+  Lock,
+  Mail,
+  Check
 } from 'lucide-react';
+import { submitLeadToEmail } from '@/lib/emailService';
 
 export default function LessonsPage() {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -28,6 +33,55 @@ export default function LessonsPage() {
     lessonFormat: "1-on-1 Private Lessons (Bellingham WA / Studio)",
     goals: ""
   });
+
+  // EMAIL GATE MODAL STATE FOR FREE CHEAT SHEET PDF
+  const [isPdfGateOpen, setIsPdfGateOpen] = useState(false);
+  const [isPdfUnlocked, setIsPdfUnlocked] = useState(false);
+  const [gateEmail, setGateEmail] = useState("");
+  const [gateName, setGateName] = useState("");
+  const [gateSubmitted, setGateSubmitted] = useState(false);
+  const [gateAction, setGateAction] = useState<'download' | 'view'>('download');
+
+  const handleOpenPdfGate = (action: 'download' | 'view' = 'download') => {
+    setGateAction(action);
+    if (isPdfUnlocked) {
+      if (action === 'download') {
+        const link = document.createElement('a');
+        link.href = '/downloads/songwriters-number-system-cheat-sheet.pdf';
+        link.download = 'Songwriters-Number-System-Cheat-Sheet.pdf';
+        link.click();
+      } else {
+        window.open('/downloads/songwriters-number-system-cheat-sheet.pdf', '_blank');
+      }
+    } else {
+      setIsPdfGateOpen(true);
+    }
+  };
+
+  const handleUnlockPdf = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!gateEmail) return;
+    setIsPdfUnlocked(true);
+    setGateSubmitted(true);
+
+    // Forward lead to scenicroutemusicllc@gmail.com
+    submitLeadToEmail({
+      subject: `[Cheat Sheet Download] New Lead: ${gateEmail}`,
+      name: gateName || 'Musician',
+      email: gateEmail,
+      formType: 'Songwriting Cheat Sheet PDF Email Gate'
+    });
+
+    // Trigger instant download or view
+    if (gateAction === 'download') {
+      const link = document.createElement('a');
+      link.href = '/downloads/songwriters-number-system-cheat-sheet.pdf';
+      link.download = 'Songwriters-Number-System-Cheat-Sheet.pdf';
+      link.click();
+    } else {
+      window.open('/downloads/songwriters-number-system-cheat-sheet.pdf', '_blank');
+    }
+  };
 
   const instruments = [
     {
@@ -65,6 +119,20 @@ export default function LessonsPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
+
+    // Forward lesson inquiry to scenicroutemusicllc@gmail.com
+    submitLeadToEmail({
+      subject: `[Lesson Inquiry] ${formData.name} - ${formData.instrument}`,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || 'Not provided',
+      instrument: formData.instrument,
+      track: formData.track,
+      experienceLevel: formData.experienceLevel,
+      lessonFormat: formData.lessonFormat,
+      goals: formData.goals,
+      formType: 'Music Lesson Consultation'
+    });
   };
 
   const handleReset = () => {
@@ -82,7 +150,7 @@ export default function LessonsPage() {
   };
 
   return (
-    <div style={{ minHeight: "100%", paddingBottom: "60px" }}>
+    <div style={{ minHeight: "100%", paddingBottom: "60px", position: "relative" }}>
       
       {/* HERO SECTION */}
       <section style={{
@@ -113,7 +181,7 @@ export default function LessonsPage() {
             Learn how music actually works on stage. Scenic Route Music provides practical, performance-driven instruction across <strong>Guitar, Vocals, Drums, Bass, and Piano</strong>. Whether you want to master the rhythm pocket in a loud rock band or write and perform your own original acoustic songs, we teach real musicality without tedious busywork.
           </p>
 
-          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
             <a href="#trial" style={{
               padding: "14px 28px",
               backgroundColor: "#d4af37",
@@ -133,8 +201,32 @@ export default function LessonsPage() {
               Book a Trial Lesson <ArrowRight size={16} />
             </a>
 
+            {/* TOP BUTTON LINKING TO FREE PDF DOWNLOAD WITH EMAIL GATE */}
+            <button
+              onClick={() => handleOpenPdfGate('download')}
+              style={{
+                padding: "14px 22px",
+                backgroundColor: "#1a1408",
+                border: "1px solid #d4af37",
+                color: "#f5ecd7",
+                fontWeight: 700,
+                fontSize: "13px",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                cursor: "pointer",
+                fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.6)",
+                transition: "all 0.2s ease"
+              }}
+            >
+              <Download size={15} color="#d4af37" /> Free Songwriting PDF
+            </button>
+
             <a href="#programs" style={{
-              padding: "14px 24px",
+              padding: "14px 22px",
               backgroundColor: "#141414",
               border: "1px solid #2e2e2e",
               color: "#ede2cb",
@@ -423,18 +515,17 @@ export default function LessonsPage() {
                 </div>
               </div>
 
-              {/* ACTION BUTTONS */}
+              {/* ACTION BUTTONS (GATED BEHIND EMAIL) */}
               <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-                <a
-                  href="/downloads/songwriters-number-system-cheat-sheet.pdf"
-                  download="Songwriters-Number-System-Cheat-Sheet.pdf"
+                <button
+                  type="button"
+                  onClick={() => handleOpenPdfGate('download')}
                   style={{
                     padding: "13px 24px",
                     backgroundColor: "#d4af37",
                     color: "#0a0a0a",
                     fontWeight: 800,
                     fontSize: "12px",
-                    textDecoration: "none",
                     textTransform: "uppercase",
                     letterSpacing: "1.2px",
                     display: "inline-flex",
@@ -442,16 +533,16 @@ export default function LessonsPage() {
                     gap: "8px",
                     border: "1px solid #f5ecd7",
                     boxShadow: "0 4px 15px rgba(212,175,55,0.35)",
-                    fontFamily: "'Courier New', Courier, monospace, sans-serif"
+                    fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                    cursor: "pointer"
                   }}
                 >
                   <Download size={15} color="#0a0a0a" /> Download Free PDF
-                </a>
+                </button>
 
-                <a
-                  href="/downloads/songwriters-number-system-cheat-sheet.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => handleOpenPdfGate('view')}
                   style={{
                     padding: "13px 20px",
                     backgroundColor: "#161616",
@@ -459,17 +550,17 @@ export default function LessonsPage() {
                     color: "#ede2cb",
                     fontWeight: 700,
                     fontSize: "12px",
-                    textDecoration: "none",
                     textTransform: "uppercase",
                     letterSpacing: "1px",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "8px",
-                    fontFamily: "'Courier New', Courier, monospace, sans-serif"
+                    fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                    cursor: "pointer"
                   }}
                 >
                   <FileText size={15} color="#d4af37" /> View In Browser ↗
-                </a>
+                </button>
               </div>
             </div>
 
@@ -480,10 +571,8 @@ export default function LessonsPage() {
               alignItems: "center",
               justifyContent: "center"
             }}>
-              <a
-                href="/downloads/songwriters-number-system-cheat-sheet.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+              <div
+                onClick={() => handleOpenPdfGate('view')}
                 style={{
                   display: "block",
                   position: "relative",
@@ -532,9 +621,9 @@ export default function LessonsPage() {
                   boxShadow: "0 4px 15px rgba(0,0,0,0.8)",
                   fontFamily: "'Courier New', Courier, monospace, sans-serif"
                 }}>
-                  <Download size={13} color="#d4af37" /> Click to Open PDF
+                  <Lock size={12} color="#d4af37" /> Unlock Free PDF
                 </div>
-              </a>
+              </div>
             </div>
 
           </div>
@@ -713,6 +802,272 @@ export default function LessonsPage() {
           )}
         </div>
       </section>
+
+      {/* EMAIL GATE MODAL FOR FREE CHEAT SHEET */}
+      {isPdfGateOpen && (
+        <div 
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: "rgba(0, 0, 0, 0.85)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+            boxSizing: "border-box"
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsPdfGateOpen(false);
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: "#0d0d0d",
+              border: "2px solid #d4af37",
+              boxShadow: "0 25px 70px rgba(0,0,0,0.98), 0 0 35px rgba(212,175,55,0.3)",
+              maxWidth: "520px",
+              width: "100%",
+              borderRadius: "4px",
+              position: "relative",
+              overflow: "hidden",
+              boxSizing: "border-box",
+              padding: "36px 30px"
+            }}
+          >
+            {/* 5-Ply Accent Strip */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: "#d4af37" }} />
+            <div style={{ position: "absolute", top: "3px", left: 0, right: 0, height: "1px", backgroundColor: "#ede2cb", opacity: 0.8 }} />
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsPdfGateOpen(false)}
+              aria-label="Close modal"
+              style={{
+                position: "absolute",
+                top: "14px",
+                right: "14px",
+                backgroundColor: "#1c1c1c",
+                border: "1px solid #333333",
+                color: "#ede2cb",
+                width: "32px",
+                height: "32px",
+                borderRadius: "3px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer"
+              }}
+            >
+              <X size={18} />
+            </button>
+
+            {gateSubmitted ? (
+              /* SUCCESS STATE */
+              <div style={{ textAlign: "center", padding: "10px 0" }}>
+                <div style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "50%",
+                  backgroundColor: "#1a1408",
+                  border: "2px solid #d4af37",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#d4af37",
+                  margin: "0 auto 16px auto",
+                  boxShadow: "0 0 20px rgba(212,175,55,0.35)"
+                }}>
+                  <Check size={28} />
+                </div>
+
+                <h3 style={{ fontFamily: "Georgia, serif", fontSize: "24px", color: "#ffffff", margin: "0 0 10px 0" }}>
+                  Cheat Sheet Unlocked!
+                </h3>
+                
+                <p style={{ color: "#d5cec2", fontSize: "14px", lineHeight: 1.6, margin: "0 0 24px 0", fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif" }}>
+                  Thank you! Your download of the <strong>Songwriter’s Number System Cheat Sheet</strong> has been initiated. You can also view or save it anytime using the buttons below:
+                </p>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <a
+                    href="/downloads/songwriters-number-system-cheat-sheet.pdf"
+                    download="Songwriters-Number-System-Cheat-Sheet.pdf"
+                    style={{
+                      padding: "13px 20px",
+                      backgroundColor: "#d4af37",
+                      color: "#0a0a0a",
+                      fontWeight: 800,
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "1px",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                      border: "1px solid #f5ecd7"
+                    }}
+                  >
+                    <Download size={15} color="#0a0a0a" /> Download PDF File Again
+                  </a>
+
+                  <a
+                    href="/downloads/songwriters-number-system-cheat-sheet.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      padding: "11px 20px",
+                      backgroundColor: "#161616",
+                      color: "#ede2cb",
+                      fontWeight: 700,
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "1px",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                      border: "1px solid #333333"
+                    }}
+                  >
+                    <FileText size={15} color="#d4af37" /> Open PDF In New Tab ↗
+                  </a>
+                </div>
+              </div>
+            ) : (
+              /* EMAIL GATE FORM */
+              <div>
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "4px 10px",
+                  backgroundColor: "#1a1408",
+                  border: "1px solid #d4af37",
+                  color: "#d4af37",
+                  fontSize: "10px",
+                  fontWeight: 800,
+                  letterSpacing: "1.2px",
+                  textTransform: "uppercase",
+                  fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                  marginBottom: "14px"
+                }}>
+                  <Lock size={11} color="#d4af37" />
+                  <span>Instant Free PDF Access</span>
+                </div>
+
+                <h3 style={{
+                  fontFamily: "Georgia, serif",
+                  fontSize: "24px",
+                  color: "#ffffff",
+                  lineHeight: 1.2,
+                  margin: "0 0 10px 0",
+                  fontWeight: 700
+                }}>
+                  Unlock Your Free Songwriter Cheat Sheet
+                </h3>
+
+                <p style={{
+                  color: "#d5cec2",
+                  fontSize: "13px",
+                  lineHeight: 1.6,
+                  margin: "0 0 20px 0",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif"
+                }}>
+                  Enter your email to get immediate access to the <strong>Songwriter’s Number System Cheat Sheet</strong> (Nashville Chord Map, Hit Blueprints &amp; Transposition Rules).
+                </p>
+
+                <form onSubmit={handleUnlockPdf} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                  <div>
+                    <label htmlFor="gate-name" style={{ display: "block", color: "#a8a090", fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px", fontFamily: "'Courier New', Courier, monospace, sans-serif" }}>
+                      First Name (Optional)
+                    </label>
+                    <input
+                      id="gate-name"
+                      type="text"
+                      value={gateName}
+                      onChange={(e) => setGateName(e.target.value)}
+                      placeholder="e.g. Luke"
+                      style={{
+                        width: "100%",
+                        padding: "11px 12px",
+                        backgroundColor: "#050505",
+                        border: "1px solid #2e2e2e",
+                        color: "#ffffff",
+                        fontSize: "13px",
+                        boxSizing: "border-box",
+                        fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif"
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="gate-email" style={{ display: "block", color: "#d4af37", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px", fontFamily: "'Courier New', Courier, monospace, sans-serif" }}>
+                      Your Email Address *
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        id="gate-email"
+                        required
+                        type="email"
+                        value={gateEmail}
+                        onChange={(e) => setGateEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        style={{
+                          width: "100%",
+                          padding: "12px 12px 12px 38px",
+                          backgroundColor: "#050505",
+                          border: "1px solid #d4af37",
+                          color: "#ffffff",
+                          fontSize: "14px",
+                          boxSizing: "border-box",
+                          fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif"
+                        }}
+                      />
+                      <Mail size={16} color="#d4af37" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }} />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      padding: "14px",
+                      backgroundColor: "#d4af37",
+                      color: "#0a0a0a",
+                      fontWeight: 800,
+                      fontSize: "13px",
+                      textTransform: "uppercase",
+                      letterSpacing: "1.5px",
+                      border: "1px solid #f5ecd7",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      fontFamily: "'Courier New', Courier, monospace, sans-serif",
+                      boxShadow: "0 4px 18px rgba(212,175,55,0.4)",
+                      marginTop: "6px"
+                    }}
+                  >
+                    <Download size={16} color="#0a0a0a" /> Unlock &amp; Download PDF
+                  </button>
+
+                  <div style={{ textAlign: "center", marginTop: "4px" }}>
+                    <span style={{ fontSize: "11px", color: "#777777", fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif" }}>
+                      ✦ No spam. We respect your privacy.
+                    </span>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );
